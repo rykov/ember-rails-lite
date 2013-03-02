@@ -20,6 +20,9 @@ class BootstrapGeneratorTest < Rails::Generators::TestCase
 
     copy_directory "app/assets/javascripts"
     copy_directory "config"
+
+    FileUtils.cp(Rails.root.join("Gemfile"), destination_root)
+    ENV['BUNDLE_GEMFILE'] = File.join(destination_root, "Gemfile")
   end
 
   test "Assert folder layout and .gitkeep files are properly created" do
@@ -27,6 +30,7 @@ class BootstrapGeneratorTest < Rails::Generators::TestCase
 
     assert_file "app/assets/javascripts/application.js",
       /Dummy = Ember.Application.create()/
+    assert_file "Gemfile", /gem\s+\"active_model_serializers\"/
     assert_new_dirs(:skip_git => false)
   end
 
@@ -36,6 +40,14 @@ class BootstrapGeneratorTest < Rails::Generators::TestCase
     assert_file "app/assets/javascripts/application.js",
       /Dummy = Ember.Application.create()/
     assert_new_dirs(:skip_git => true)
+  end
+
+  test "Assert folder layout is created without ActiveModelSerializers" do
+    run_generator %w(-a)
+
+    assert_file "app/assets/javascripts/application.js",
+      /Dummy = Ember.Application.create()/
+    assert_file("Gemfile") { |gf| gf !~ /active_model_serializers/ }
   end
 
   test "Assert folder layout is properly created with custom path" do

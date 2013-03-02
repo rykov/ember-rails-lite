@@ -12,6 +12,7 @@ module Ember
 
       class_option :ember_path, :type => :string, :aliases => "-d", :default => false, :desc => "Custom ember app path"
       class_option :skip_git, :type => :boolean, :aliases => "-g", :default => false, :desc => "Skip Git keeps"
+      class_option :skip_ams, :type => :boolean, :aliases => "-a", :default => false, :desc => "Skip ActiveModelSerializers"
 
       def inject_ember
         application_file = "app/assets/javascripts/application.js"
@@ -29,6 +30,16 @@ module Ember
           ]
           dependencies.join("\n").concat("\n")
         end
+      end
+
+      def inject_ams
+        return if options[:skip_ams]
+        gem_file = ENV['BUNDLE_GEMFILE'] || 'Gemfile'
+        append_to_file(gem_file, "\n" + [
+          '# Learn how to build an Ember-compatible Rails API at',
+          '# https://github.com/rails-api/active_model_serializers',
+          'gem "active_model_serializers"'
+        ].join("\n"))
       end
 
       def create_dir_layout
