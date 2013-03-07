@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "ember/rails/version"
 
 Gem::Specification.new do |s|
-  s.name        = "ember-rails"
+  s.name        = "ember-rails-lite"
   s.version     = Ember::Rails::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Keith Pitt", "Rob Monie", "Joao Carlos", "Paul Chavard"]
